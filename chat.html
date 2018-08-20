@@ -6,19 +6,35 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <style>
-    #contains{
+    #posts{
       height: 80% ;
-      width:60% ;
+      width:100% ;
       overflow: scroll ;
+      box-sizing: border-box;
+      margin: 0 auto ;
+    }
+
+    #posts p{
+      font-size:20px ;
+      width: 60%;
+      border-radius:50px ;
+      text-align: center;
+      margin: 0 auto ;
+      margin-top: 10px ;
+      padding: 10px ;
+      color:white;
+      background-color: limegreen;
     }
 
     #main{
       height:700px;
       width:800px ;
-      text-align: center;
+      text-align: center ;
       margin: 0 auto ;
       border: solid 2px #0d0d0d;
     }
+
+
 
   </style>
 </head>
@@ -30,97 +46,58 @@
   <script type="text/babel">
     ( () => {
       'use strict';
-      //Add Comment
-        function Posts(props){
 
-          const posts = props.posts.map( (post , index )=>{
-            return(
-              <li></li>
-            );
-          });
+        function Post(props){
           return(
-
+            <p>{ props.post }</p>
           );
         }
 
-        class Contents extends React.Component{
-          constructor(props){
-            super(props);
-            this.state = {
-              postMessages: [],
-            }
-          }
-
-          //Contentsはprops.messageで入力されたテキストを受け取る
-
-          render(){
+        function Posts(props){
+          const posts = props.posts.map( (post, index) => {
             return(
-              <div id="contains">
-                <Posts posts={ this.state.postMessages }/>
-              </div>
+              <Post key={index} post={post} />
             );
-          }
-        }
+          });
 
-        class InputForms extends React.Component{
-          constructor(props){
-            super(props);
-            this.state = {
-              textValue: "",
-            }
+          return(
+            <ul id="posts">
+              {posts}
+            </ul>
+          );
 
-            this.inputText = this.inputText.bind(this);
-            this.postMessage = this.postMessage.bind(this);
-          }
-
-          inputText(e){
-            const textValue = e.target.value ;
-            this.setState({
-              textValue: textValue,
-            });
-          }
-
-          postMessage(){
-            const msg = this.state.textValue;
-            this.props.postMessage( msg );
-            this.setState({
-              textValue: '' ,
-            });
-          }
-
-          render(){
-            return(
-              <div>
-                <input type="text" value={ this.state.textValue } onChange={ this.inputText }/>
-                <button onClick={ this.postMessage } >post</button>
-              </div>
-            );
-          }
         }
 
         class ChatMain extends React.Component{
           constructor(props){
             super(props);
+            this.state = {
+              posts: [],
+              post: "",
+            };
 
-            this.state ={
-              message: "" ,
-            }
-
-            this.postMessage = this.postMessage.bind(this);
+            this.sendPost = this.sendPost.bind(this);
           }
 
-          postMessage(message){
+          sendPost(){
+            let post = this.state.post ;
+            let posts = this.state.posts ;
+            posts.push(post);
             this.setState({
-              message: message ,
+              posts: posts ,
+              post: "",
             });
           }
 
           render(){
             return(
               <div id="main">
-                <Contents message={ this.state.message }/>
-                <InputForms postMessage={ this.postMessage } />
-                <div>{ this.state.message }</div>
+                <Posts  posts={ this.state.posts }/>
+                <input type="text" onChange={
+                   (e) => this.setState({
+                     post: e.target.value,
+                   })  } onSubmit={ this.sendPost } value={ this.state.post } />
+                <button onClick={ this.sendPost }>post</button>
               </div>
             );
           }
