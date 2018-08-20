@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    #contains{
+      height: 80% ;
+      width:60% ;
+      overflow: scroll ;
+    }
+
+    #main{
+      height:700px;
+      width:800px ;
+      text-align: center;
+      margin: 0 auto ;
+      border: solid 2px #0d0d0d;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <script type="text/babel">
+    ( () => {
+      'use strict';
+
+        function Posts(props){
+
+          const posts = props.posts.map( (post , index )=>{
+            return(
+              <li></li>
+            );
+          });
+          return(
+
+          );
+        }
+
+        class Contents extends React.Component{
+          constructor(props){
+            super(props);
+            this.state = {
+              postMessages: [],
+            }
+          }
+
+          //Contentsはprops.messageで入力されたテキストを受け取る
+
+          render(){
+            return(
+              <div id="contains">
+                <Posts posts={ this.state.postMessages }/>
+              </div>
+            );
+          }
+        }
+
+        class InputForms extends React.Component{
+          constructor(props){
+            super(props);
+            this.state = {
+              textValue: "",
+            }
+
+            this.inputText = this.inputText.bind(this);
+            this.postMessage = this.postMessage.bind(this);
+          }
+
+          inputText(e){
+            const textValue = e.target.value ;
+            this.setState({
+              textValue: textValue,
+            });
+          }
+
+          postMessage(){
+            const msg = this.state.textValue;
+            this.props.postMessage( msg );
+            this.setState({
+              textValue: '' ,
+            });
+          }
+
+          render(){
+            return(
+              <div>
+                <input type="text" value={ this.state.textValue } onChange={ this.inputText }/>
+                <button onClick={ this.postMessage } >post</button>
+              </div>
+            );
+          }
+        }
+
+        class ChatMain extends React.Component{
+          constructor(props){
+            super(props);
+
+            this.state ={
+              message: "" ,
+            }
+
+            this.postMessage = this.postMessage.bind(this);
+          }
+
+          postMessage(message){
+            this.setState({
+              message: message ,
+            });
+          }
+
+          render(){
+            return(
+              <div id="main">
+                <Contents message={ this.state.message }/>
+                <InputForms postMessage={ this.postMessage } />
+                <div>{ this.state.message }</div>
+              </div>
+            );
+          }
+        }
+
+        ReactDOM.render(
+          <ChatMain/>,
+          document.getElementById("root")
+        );
+
+    })();
+  </script>
+</body>
+</html>
